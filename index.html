@@ -5,24 +5,41 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ты будешь моей валентинкой? 💋</title>
+    <title>Will you be my valentine? 💋</title>
     <link rel="icon" type="image/x-icon" href="public/heart.gif">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Handjet:wght@100..900&family=Tiny5&display=swap" rel="stylesheet">
-    <audio id="hoverSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
-    <audio id="yesSound" src="https://www.soundjay.com/human/sounds/applause-01.mp3"></audio>
-    <audio id="noSound" src="https://www.soundjay.com/misc/sounds/fail-trombone-03.mp3"></audio>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Handjet:wght@100..900&family=Tiny5&family=Playfair+Display:wght@400;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <audio id="bgMusic" loop preload="auto">
+        <source src="public/chahun-main-ya-naa.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+<button id="startMusicBtn" class="music-start-btn">
+    Click here to start ♫
+</button>
 <div class="container">
-    <h1>Ты будешь моей валентинкой? 💖</h1>
-    <img src="https://i.pinimg.com/originals/07/6d/a6/076da60f5b9569f2cc8cadee0e8c1992.gif" alt="Cute GIF" class="gif">
+    <h1>Ramya ji, Will you be my valentine? 🤍❤️</h1>
+    <div class="slideshow-container">
+        <div class="slideshow-slide active">
+            <img src="public/ramyaji1.png" alt="Ramya ji">
+        </div>
+        <div class="slideshow-slide">
+            <img src="public/ramyaji2.png" alt="Ramya ji">
+        </div>
+        <div class="slideshow-slide">
+            <img src="public/ramyaji3.png" alt="Ramya ji">
+        </div>
+        <div class="slideshow-slide">
+            <img src="public/ramyaji4.png" alt="Ramya ji">
+        </div>
+    </div>
     <div class="buttons">
-        <button id="yesBtn">Да</button>
-        <button id="noBtn">Нет</button>
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
     </div>
     <p id="responseText"></p>
 </div>

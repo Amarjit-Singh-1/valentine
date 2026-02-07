@@ -2,14 +2,78 @@ const title = document.querySelector('h1');
 const yesBtn = document.getElementById('yesBtn');
 const noBtn = document.getElementById('noBtn');
 const responseText = document.getElementById('responseText');
-const gif = document.querySelector('.gif');
-const hoverSound = document.getElementById('hoverSound');
-const yesSound = document.getElementById('yesSound');
-const noSound = document.getElementById('noSound');
+const slideshowContainer = document.querySelector('.slideshow-container');
+const bgMusic = document.getElementById('bgMusic');
+const startMusicBtn = document.getElementById('startMusicBtn');
+
+// Set background music volume to be subtle (20% volume)
+let musicStarted = false;
+
+function startMusic() {
+    if (bgMusic && !musicStarted) {
+        bgMusic.volume = 0.2;
+        const playPromise = bgMusic.play();
+        
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    musicStarted = true;
+                    
+                    // Hide the start music button
+                    if (startMusicBtn) {
+                        startMusicBtn.classList.add('hidden');
+                        setTimeout(() => {
+                            startMusicBtn.style.display = 'none';
+                        }, 500);
+                    }
+                })
+                .catch(e => {
+                    console.log('Audio play failed:', e.message);
+                });
+        }
+    }
+}
+
+// Start music button click handler
+if (startMusicBtn) {
+    startMusicBtn.addEventListener('click', startMusic);
+}
+
+// Slideshow functionality
+const slides = document.querySelectorAll('.slideshow-slide');
+let currentSlide = 0;
+
+function showNextSlide() {
+    if (slides.length === 0) return;
+    
+    // Remove active class from current slide
+    slides[currentSlide].classList.remove('active');
+    
+    // Move to next slide
+    currentSlide = (currentSlide + 1) % slides.length;
+    
+    // Add active class to new slide
+    slides[currentSlide].classList.add('active');
+}
+
+// Change slide every 3 seconds
+if (slides.length > 1) {
+    setInterval(showNextSlide, 10000);
+}
 
 yesBtn.addEventListener('click', () => {
-    responseText.textContent = 'Ура! Я так рада! 💖 💞';
-    gif.src = 'https://i.pinimg.com/originals/b4/65/34/b46534530b0ef3ffac6636f068dd2e12.gif';
+    responseText.innerHTML = `
+        <p style="margin-bottom: 15px;">Yay, I am so happy! 🤍❤️</p>
+        <p style="margin-bottom: 15px;">Knowing you has truly been a blessing, and with every passing day, I find myself falling for you a little more.</p>
+        <p style="margin-bottom: 15px;">You always make me feel cared for and special, and this page is just a small way to express what words sometimes can't.</p>
+        <p style="margin-bottom: 15px;">Everyone has opinions, but you're the one who asks me how I feel — and that means more than you know.</p>
+        <p style="margin-bottom: 10px;">So here's my heart 🤍 to my Valentine.</p>
+        <p>I hope all your dreams come true — even the one above.</p>
+    `;
+    // Replace slideshow with couple image
+    if (slideshowContainer) {
+        slideshowContainer.innerHTML = '<img src="public/couple.png" alt="Together" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;">';
+    }
     yesBtn.style.display = 'none';
     noBtn.style.display = 'none';
     title.style.color = 'transparent';
@@ -26,19 +90,19 @@ yesBtn.addEventListener('click', () => {
 });
 
 noBtn.addEventListener('mouseover', () => {
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-    noBtn.style.position = 'absolute';
+    const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+    const x = Math.max(10, Math.random() * maxX);
+    const y = Math.max(10, Math.random() * maxY);
+    noBtn.style.position = 'fixed';
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
+    noBtn.style.zIndex = '1000';
 });
 
-noBtn.addEventListener('click', () => {
-    responseText.textContent = 'Нет? Ну ладно, но ты всё равно моя валентинка! 🤭';
-    gif.src = 'https://i.pinimg.com/originals/3e/47/7e/3e477e83c35e2a7a38f19ccdad163faa.gif';
-    yesBtn.style.display = 'none';
-    noBtn.style.display = 'none';
-    title.style.display = 'none';
+// No button click - no effect (button still moves on hover)
+noBtn.addEventListener('click', (e) => {
+    e.preventDefault();
 });
 
 // hearts animation
@@ -46,17 +110,18 @@ noBtn.addEventListener('click', () => {
 const canvas = document.getElementById('heartsCanvas');
 const ctx = canvas.getContext('2d');
 
+if (!canvas) {
+    console.error('Canvas element not found!');
+}
+
+if (!ctx) {
+    console.error('Could not get canvas context!');
+}
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-document.addEventListener('mousemove', (e) => {
-    const heart = new Heart();
-    heart.x = e.clientX;
-    heart.y = e.clientY;
-    heart.size = 10;
-    heart.speed = 1;
-    hearts.push(heart);
-});
+console.log('Canvas initialized:', canvas.width, 'x', canvas.height);
 
 const hearts = [];
 
@@ -89,40 +154,42 @@ class Heart {
     }
 }
 
+document.addEventListener('mousemove', (e) => {
+    const heart = new Heart();
+    heart.x = e.clientX;
+    heart.y = e.clientY;
+    heart.size = 10;
+    heart.speed = 1;
+    hearts.push(heart);
+});
+
 function init() {
     for (let i = 0; i < 50; i++) {
         hearts.push(new Heart());
     }
+    console.log('Initialized', hearts.length, 'hearts');
 }
 
+let frameCount = 0;
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     hearts.forEach(heart => heart.update());
     requestAnimationFrame(animate);
+    
+    // Log every 60 frames (about once per second)
+    frameCount++;
+    if (frameCount === 60) {
+        console.log('Animation running, hearts count:', hearts.length);
+        frameCount = 0;
+    }
 }
 
 init();
 animate();
+console.log('Animation started');
 
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
 
-// sounds
-
-yesBtn.addEventListener('mouseenter', () => {
-    hoverSound.play();
-});
-
-noBtn.addEventListener('mouseenter', () => {
-    hoverSound.play();
-});
-
-yesBtn.addEventListener('click', () => {
-    yesSound.play();
-});
-
-noBtn.addEventListener('click', () => {
-    noSound.play();
-});
